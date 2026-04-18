@@ -17,6 +17,7 @@ test("renderReport outputs escaped, self-contained HTML", () => {
   assert.match(html, /Safe &lt;b&gt;bio&lt;\/b&gt; &amp; useful/);
   assert.match(html, /Octo &lt;Cat&gt;/);
   assert.match(html, /https:\/\/octo\.example\.dev/);
+  assert.match(html, /Visit octo\.example\.dev/);
   assert.match(html, /Activity heatmap/);
   assert.match(html, /<svg/);
   assert.match(html, /View repository/);

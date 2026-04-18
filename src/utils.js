@@ -110,7 +110,9 @@ export function formatDayLabel(value) {
 }
 
 export function relativeDaysFromNow(value) {
-  const milliseconds = Date.now() - new Date(value).getTime();
+  const today = startOfUtcDay(new Date());
+  const target = startOfUtcDay(value);
+  const milliseconds = today.getTime() - target.getTime();
   const days = Math.max(0, Math.floor(milliseconds / 86400000));
 
   if (days === 0) {

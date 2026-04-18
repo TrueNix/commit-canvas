@@ -165,6 +165,28 @@ export function renderReport(model) {
         gap: 12px;
       }
 
+      .hero-summary {
+        font-size: 1.08rem;
+        color: rgba(246, 239, 230, 0.84);
+      }
+
+      .hero-highlights {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .hero-highlight {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.84);
+        font-size: 0.88rem;
+      }
+
       .button {
         display: inline-flex;
         align-items: center;
@@ -447,7 +469,7 @@ export function renderReport(model) {
             </div>
           </div>
 
-          <p>${escapeHtml(model.profile.bio)}</p>
+          <p class="hero-summary">${escapeHtml(model.profile.summary || model.profile.bio)}</p>
 
           <div class="profile-meta">
             ${model.profile.company ? `<span>${escapeHtml(model.profile.company)}</span>` : ""}
@@ -456,13 +478,23 @@ export function renderReport(model) {
             <span>${escapeHtml(model.meta.sourceLabel)}</span>
           </div>
 
+          ${
+            model.profile.highlights?.length
+              ? `<div class="hero-highlights">
+            ${model.profile.highlights
+              .map((item) => `<span class="hero-highlight">${escapeHtml(item)}</span>`)
+              .join("")}
+          </div>`
+              : ""
+          }
+
           <div class="hero-actions">
             <a class="button button-primary" href="${escapeHtml(model.profile.profileUrl)}" target="_blank" rel="noreferrer">
               Open profile
             </a>
             ${
               model.profile.blog
-                ? `<a class="button button-secondary" href="${escapeHtml(normalizeExternalUrl(model.profile.blog))}" target="_blank" rel="noreferrer">Visit website</a>`
+                ? `<a class="button button-secondary" href="${escapeHtml(normalizeExternalUrl(model.profile.blog))}" target="_blank" rel="noreferrer">${escapeHtml(deriveWebsiteLabel(model.profile.blog))}</a>`
                 : ""
             }
           </div>
@@ -643,9 +675,11 @@ export function renderReport(model) {
             <p class="eyebrow">Recent public activity</p>
             <h3>Latest visible moves</h3>
             <div class="timeline" style="margin-top: 18px;">
-              ${model.recentActivity
-                .map(
-                  (item) => `
+              ${
+                model.recentActivity.length
+                  ? model.recentActivity
+                      .map(
+                        (item) => `
                 <article class="timeline-item">
                   <div class="timeline-row">
                     <span>${escapeHtml(item.date)}</span>
@@ -659,8 +693,10 @@ export function renderReport(model) {
                   }
                 </article>
               `,
-                )
-                .join("")}
+                      )
+                      .join("")
+                  : `<article class="timeline-item"><p>No recent public events were available for this run.</p></article>`
+              }
             </div>
           </div>
 
@@ -819,6 +855,23 @@ function normalizeExternalUrl(value) {
     return `https://${value}`;
   }
   return value;
+}
+
+function deriveWebsiteLabel(value) {
+  try {
+    const hostname = new URL(normalizeExternalUrl(value)).hostname.replace(/^www\./, "");
+    const knownHosts = {
+      "linkedin.com": "Visit LinkedIn",
+      "x.com": "Visit X",
+      "twitter.com": "Visit X",
+      "youtube.com": "Visit YouTube",
+      "medium.com": "Visit Medium",
+    };
+
+    return knownHosts[hostname] || `Visit ${hostname}`;
+  } catch {
+    return "Visit website";
+  }
 }
 
 function shortMonth(value) {

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { parseArgs } from "../src/utils.js";
+import { parseArgs, relativeDaysFromNow } from "../src/utils.js";
 
 test("parseArgs builds defaults from the username and environment token", () => {
   const previousToken = process.env.GITHUB_TOKEN;
@@ -48,4 +48,13 @@ test("parseArgs rejects invalid input", () => {
   assert.throws(() => parseArgs(["octocat", "--days", "0"]), /positive number/);
   assert.throws(() => parseArgs(["octocat", "--output"]), /Missing value for --output/);
   assert.throws(() => parseArgs(["octocat", "--nope"]), /Unknown option/);
+});
+
+test("relativeDaysFromNow compares calendar days instead of raw hours", () => {
+  const now = new Date();
+  const yesterday = new Date(now);
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  yesterday.setUTCHours(23, 59, 0, 0);
+
+  assert.equal(relativeDaysFromNow(yesterday.toISOString()), "1 day ago");
 });

@@ -32,15 +32,17 @@ export function buildVisualizationModel(snapshot) {
   const monthlyTrend = buildMonthlyTrend(contributionSeries);
   const weekdayBreakdown = buildWeekdayBreakdown(contributionSeries);
   const streaks = computeStreaks(contributionSeries);
+  const repoSpotlights = buildRepoSpotlights(ownedRepos);
   const topDay = contributionSeries.reduce((best, day) => (day.count > best.count ? day : best), {
     date: toIsoDate(now),
     count: 0,
   });
   const recentActivity = buildRecentActivity(events).slice(0, 10);
   const activityMix = buildActivityMix(events, contributions);
-  const repoSpotlights = buildRepoSpotlights(ownedRepos);
   const contributionRepos = buildContributionRepos(contributions);
   const warnings = buildWarnings({ tokenUsed, contributions, contributionError });
+  const profileSummary = user.bio || buildProfileSummary({ user, activeRepos, languageBreakdown, repoSpotlights, days });
+  const profileHighlights = buildProfileHighlights({ activeRepos, languageBreakdown, repoSpotlights, streaks, days });
   const insights = buildInsights({
     activityMix,
     activeRepos,
@@ -70,6 +72,7 @@ export function buildVisualizationModel(snapshot) {
       login: user.login,
       name: user.name || user.login,
       bio: user.bio || "No public bio available.",
+      summary: profileSummary,
       avatarUrl: user.avatar_url,
       profileUrl: user.html_url,
       company: user.company || "",
@@ -79,6 +82,7 @@ export function buildVisualizationModel(snapshot) {
       followers: user.followers,
       following: user.following,
       publicRepos: user.public_repos,
+      highlights: profileHighlights,
     },
     overviewStats: [
       { label: "Public repos", value: user.public_repos, detail: `${activeRepos.length} updated in ${days} days` },
@@ -288,8 +292,9 @@ function buildLanguageBreakdown(repos) {
 function buildRepoSpotlights(repos) {
   return [...repos]
     .sort((left, right) => {
-      if (right.stargazers_count !== left.stargazers_count) {
-        return right.stargazers_count - left.stargazers_count;
+      const scoreDifference = scoreRepoSpotlight(right) - scoreRepoSpotlight(left);
+      if (scoreDifference !== 0) {
+        return scoreDifference;
       }
       return new Date(right.pushed_at) - new Date(left.pushed_at);
     })
@@ -297,7 +302,7 @@ function buildRepoSpotlights(repos) {
     .map((repo) => ({
       name: repo.name,
       fullName: repo.full_name,
-      description: repo.description || "No description yet.",
+      description: buildRepoDescription(repo),
       url: repo.html_url,
       stars: repo.stargazers_count,
       forks: repo.forks_count,
@@ -324,14 +329,31 @@ function buildContributionRepos(contributions) {
 }
 
 function buildRecentActivity(events) {
-  return events.map((event) => ({
-    id: event.id,
-    summary: summarizeEvent(event),
-    repo: event.repo?.name || "Unknown repository",
-    repoUrl: event.repo?.name ? `https://github.com/${event.repo.name}` : "",
-    date: formatShortDate(event.created_at),
-    relative: relativeDaysFromNow(event.created_at),
-  }));
+  const seen = new Set();
+  const items = [];
+
+  for (const event of events) {
+    const summary = summarizeEvent(event);
+    const repo = event.repo?.name || "Unknown repository";
+    const date = formatShortDate(event.created_at);
+    const dedupeKey = `${summary}|${repo}|${date}`;
+
+    if (seen.has(dedupeKey)) {
+      continue;
+    }
+
+    seen.add(dedupeKey);
+    items.push({
+      id: event.id,
+      summary,
+      repo,
+      repoUrl: event.repo?.name ? `https://github.com/${event.repo.name}` : "",
+      date,
+      relative: relativeDaysFromNow(event.created_at),
+    });
+  }
+
+  return items;
 }
 
 function summarizeEvent(event) {
@@ -339,7 +361,10 @@ function summarizeEvent(event) {
 
   switch (event.type) {
     case "PushEvent": {
-      const commits = event.payload?.size || event.payload?.commits?.length || 0;
+      const commits = event.payload?.commits?.length || event.payload?.size || 0;
+      if (commits <= 0) {
+        return `Updated branch in ${repo}`;
+      }
       return `Pushed ${commits} ${pluralize(commits, "commit")} to ${repo}`;
     }
     case "PullRequestEvent":
@@ -382,6 +407,44 @@ function buildWarnings({ tokenUsed, contributions, contributionError }) {
   warnings.push("GitHub's public events feed can lag, so very recent activity may not appear immediately.");
 
   return warnings;
+}
+
+function buildProfileSummary({ user, activeRepos, languageBreakdown, repoSpotlights, days }) {
+  const owner = user.name || user.login;
+  const company = cleanCompany(user.company);
+  const leadLanguages = languageBreakdown.slice(0, 2).map((item) => item.label);
+  const repoLead = repoSpotlights[0]?.name;
+
+  const leadLanguageSentence = leadLanguages.length
+    ? `Recent work leans ${leadLanguages.join(" and ")}`
+    : "Recent work spans a mixed stack";
+  const activitySentence = `${activeRepos.length} owned ${pluralize(activeRepos.length, "repository")} changed in the last ${days} days`;
+  const leadRepoSentence = repoLead ? `${repoLead} currently carries the strongest public signal.` : "This profile is actively shipping in public.";
+
+  if (company) {
+    return `${owner} builds in public from ${company}. ${leadLanguageSentence}, ${activitySentence}, and ${leadRepoSentence}`;
+  }
+
+  return `${owner} ships public work under the ${user.login} handle. ${leadLanguageSentence}, ${activitySentence}, and ${leadRepoSentence}`;
+}
+
+function buildProfileHighlights({ activeRepos, languageBreakdown, repoSpotlights, streaks, days }) {
+  const highlights = [];
+  const leadLanguage = languageBreakdown[0];
+  const topRepo = repoSpotlights[0];
+
+  highlights.push(`${activeRepos.length} active ${pluralize(activeRepos.length, "repo")} in ${days} days`);
+  highlights.push(`${streaks.current}-day current streak`);
+
+  if (leadLanguage) {
+    highlights.push(`${leadLanguage.label} footprint ${leadLanguage.share}%`);
+  }
+
+  if (topRepo) {
+    highlights.push(`Spotlight: ${topRepo.name}`);
+  }
+
+  return highlights.slice(0, 4);
 }
 
 function buildInsights({
@@ -432,6 +495,28 @@ function simplifyEventType(type) {
   };
 
   return mapping[type] || titleCase(type);
+}
+
+function buildRepoDescription(repo) {
+  if (repo.description) {
+    return repo.description;
+  }
+
+  const language = repo.language ? `${repo.language} ` : "";
+  const freshness = relativeDaysFromNow(repo.pushed_at);
+  return `A ${language}project updated ${freshness}.`;
+}
+
+function scoreRepoSpotlight(repo) {
+  const daysSincePush = Math.max(0, Math.floor((Date.now() - new Date(repo.pushed_at).getTime()) / 86400000));
+  const recencyBonus = clamp(45 - daysSincePush, 0, 45);
+  const starWeight = Math.min(repo.stargazers_count, 50) * 5 + Math.max(repo.stargazers_count - 50, 0);
+  const forkWeight = Math.min(repo.forks_count, 20) * 2;
+  return starWeight + forkWeight + recencyBonus;
+}
+
+function cleanCompany(value) {
+  return String(value || "").replace(/^@/, "").trim();
 }
 
 function deriveLevel(count, maxCount) {
