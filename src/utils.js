@@ -139,7 +139,7 @@ export function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-export function pluralize(count, singular, plural = `${singular}s`) {
+export function pluralize(count, singular, plural = defaultPlural(singular)) {
   return count === 1 ? singular : plural;
 }
 
@@ -175,4 +175,12 @@ export function subtractDays(value, amount) {
   const date = new Date(value);
   date.setUTCDate(date.getUTCDate() - amount);
   return date;
+}
+
+function defaultPlural(singular) {
+  if (/[^\Waeiou]y$/i.test(singular)) {
+    return `${singular.slice(0, -1)}ies`;
+  }
+
+  return `${singular}s`;
 }

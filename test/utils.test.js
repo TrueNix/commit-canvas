@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { parseArgs, relativeDaysFromNow } from "../src/utils.js";
+import { parseArgs, pluralize, relativeDaysFromNow } from "../src/utils.js";
 
 test("parseArgs builds defaults from the username and environment token", () => {
   const previousToken = process.env.GITHUB_TOKEN;
@@ -57,4 +57,9 @@ test("relativeDaysFromNow compares calendar days instead of raw hours", () => {
   yesterday.setUTCHours(23, 59, 0, 0);
 
   assert.equal(relativeDaysFromNow(yesterday.toISOString()), "1 day ago");
+});
+
+test("pluralize handles common y-ending nouns", () => {
+  assert.equal(pluralize(2, "repository"), "repositories");
+  assert.equal(pluralize(2, "day"), "days");
 });
