@@ -1,0 +1,25 @@
+{
+  "name": "commit-canvas",
+  "version": "0.1.0",
+  "description": "Generate a beautiful standalone HTML report from GitHub activity, repositories, and contribution data.",
+  "type": "module",
+  "bin": {
+    "commit-canvas": "./bin/commit-canvas.js"
+  },
+  "scripts": {
+    "check": "node --check ./bin/commit-canvas.js && node --check ./scripts/build-pages.js && node --check ./src/cli.js && node --check ./src/github-api.js && node --check ./src/aggregate.js && node --check ./src/report.js && node --check ./src/utils.js && node --check ./test-support/helpers.js && node --check ./test/utils.test.js && node --check ./test/github-api.test.js && node --check ./test/aggregate.test.js && node --check ./test/report.test.js",
+    "pages:build": "node ./scripts/build-pages.js",
+    "test": "node --test",
+    "start": "node ./bin/commit-canvas.js",
+    "demo": "node ./bin/commit-canvas.js sindresorhus --output ./reports/sindresorhus.report.html --json ./reports/sindresorhus.report.json"
+  },
+  "keywords": [
+    "github",
+    "visualization",
+    "contributions",
+    "report",
+    "activity",
+    "cli"
+  ],
+  "license": "MIT"
+}

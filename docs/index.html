@@ -1,0 +1,2611 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TrueNix · Commit Canvas</title>
+    <meta
+      name="description"
+      content="Generated GitHub activity report for TrueNix."
+    >
+    <style>
+      :root {
+        --bg: #07111c;
+        --bg-2: #0d1727;
+        --surface: rgba(255, 255, 255, 0.06);
+        --surface-strong: rgba(255, 255, 255, 0.1);
+        --border: rgba(255, 255, 255, 0.12);
+        --text: #f6efe6;
+        --muted: rgba(246, 239, 230, 0.72);
+        --accent: #ffb86b;
+        --accent-2: #9ce6ff;
+        --accent-3: #ff8faa;
+        --shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+        --radius-xl: 30px;
+        --radius-lg: 24px;
+        --radius-md: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(255, 184, 107, 0.14), transparent 30%),
+          radial-gradient(circle at 80% 0%, rgba(156, 230, 255, 0.12), transparent 25%),
+          linear-gradient(180deg, #06111b 0%, #0d1623 45%, #07111c 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0.012)),
+          repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.014) 0,
+            rgba(255, 255, 255, 0.014) 1px,
+            transparent 1px,
+            transparent 72px
+          );
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1240px, calc(100vw - 28px));
+        margin: 0 auto;
+        padding: 26px 0 60px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      .hero-card,
+      .panel,
+      .repo-card,
+      .timeline-item,
+      .insight-item,
+      .warning,
+      .stat-card {
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(22px);
+      }
+
+      .hero-card {
+        display: grid;
+        gap: 22px;
+        padding: 28px;
+        border-radius: var(--radius-xl);
+      }
+
+      .eyebrow {
+        margin: 0;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: rgba(255, 255, 255, 0.62);
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        margin: 0;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        letter-spacing: -0.03em;
+        line-height: 0.96;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 7vw, 5.8rem);
+        max-width: 10ch;
+      }
+
+      h2 {
+        font-size: clamp(2rem, 4vw, 3.3rem);
+      }
+
+      h3 {
+        font-size: 1.6rem;
+      }
+
+      p {
+        margin: 0;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .hero-top {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .avatar {
+        width: 86px;
+        height: 86px;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .profile-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid transparent;
+      }
+
+      .button-primary {
+        background: linear-gradient(135deg, var(--accent), #ffe2a6);
+        color: #201207;
+      }
+
+      .button-secondary {
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      .hero-side {
+        display: grid;
+        gap: 14px;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .stat-card {
+        border-radius: var(--radius-lg);
+        padding: 18px;
+      }
+
+      .stat-value {
+        font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+        font-size: 2.2rem;
+        color: var(--text);
+      }
+
+      .stat-label {
+        display: block;
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.74);
+        font-size: 0.95rem;
+      }
+
+      .stat-detail {
+        display: block;
+        margin-top: 4px;
+        color: rgba(255, 255, 255, 0.56);
+        font-size: 0.84rem;
+      }
+
+      .warning {
+        border-radius: var(--radius-lg);
+        padding: 18px 20px;
+      }
+
+      .layout {
+        display: grid;
+        gap: 20px;
+      }
+
+      .panel {
+        border-radius: var(--radius-xl);
+        padding: 26px;
+      }
+
+      .panel-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+        gap: 20px;
+      }
+
+      .metric-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .metric-chip {
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .metric-chip strong {
+        display: block;
+        font-size: 1.5rem;
+        color: var(--text);
+      }
+
+      .heatmap {
+        width: 100%;
+        overflow-x: auto;
+        margin-top: 16px;
+      }
+
+      .heatmap svg,
+      .trend svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .bars,
+      .languages {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .bar-row {
+        display: grid;
+        gap: 8px;
+      }
+
+      .bar-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      .bar-track {
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+
+      .bar-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      }
+
+      .language-fill {
+        background: linear-gradient(135deg, var(--bar-color), rgba(255,255,255,0.9));
+      }
+
+      .repo-grid,
+      .insight-grid,
+      .timeline {
+        display: grid;
+        gap: 16px;
+      }
+
+      .repo-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .repo-card,
+      .insight-item,
+      .timeline-item {
+        border-radius: var(--radius-lg);
+        padding: 20px;
+      }
+
+      .repo-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 12px;
+      }
+
+      .repo-name {
+        font-size: 1.28rem;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.84rem;
+        color: rgba(255, 255, 255, 0.82);
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--dot-color);
+      }
+
+      .repo-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: 20px;
+      }
+
+      .timeline-item {
+        display: grid;
+        gap: 8px;
+      }
+
+      .timeline-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.62);
+        font-size: 0.9rem;
+      }
+
+      .insight-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      footer {
+        margin-top: 22px;
+        padding: 0 4px;
+        color: rgba(255, 255, 255, 0.56);
+        font-size: 0.92rem;
+      }
+
+      code {
+        font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+        font-size: 0.9em;
+        color: #ffe4bb;
+      }
+
+      @media (max-width: 1024px) {
+        .hero,
+        .panel-grid,
+        .two-column,
+        .repo-grid,
+        .insight-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          width: min(100vw - 18px, 100%);
+          padding-top: 18px;
+        }
+
+        .hero-card,
+        .panel {
+          padding: 22px;
+        }
+
+        .stat-grid,
+        .metric-strip {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <section class="hero">
+        <article class="hero-card">
+          <p class="eyebrow">Generated activity portrait</p>
+          <div class="hero-top">
+            <img class="avatar" src="https://avatars.githubusercontent.com/u/19280966?v=4" alt="TrueNix avatar">
+            <div>
+              <h1>TrueNix</h1>
+              <p style="margin-top: 10px;">@TrueNix</p>
+            </div>
+          </div>
+
+          <p>No public bio available.</p>
+
+          <div class="profile-meta">
+            <span>ActiveFence</span>
+            
+            <span>On GitHub since 2016</span>
+            <span>Yearly contribution calendar via GitHub GraphQL</span>
+          </div>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="https://github.com/TrueNix" target="_blank" rel="noreferrer">
+              Open profile
+            </a>
+            <a class="button button-secondary" href="https://www.linkedin.com/in/deadbeef/" target="_blank" rel="noreferrer">Visit website</a>
+          </div>
+        </article>
+
+        <aside class="hero-side">
+          <div class="stat-grid">
+            
+              <article class="stat-card">
+                <span class="stat-value">135</span>
+                <span class="stat-label">Public repos</span>
+                <span class="stat-detail">4 updated in 90 days</span>
+              </article>
+            
+              <article class="stat-card">
+                <span class="stat-value">3</span>
+                <span class="stat-label">Stars earned</span>
+                <span class="stat-detail">3 forks across owned repos</span>
+              </article>
+            
+              <article class="stat-card">
+                <span class="stat-value">1</span>
+                <span class="stat-label">Followers</span>
+                <span class="stat-detail">4 following</span>
+              </article>
+            
+              <article class="stat-card">
+                <span class="stat-value">696</span>
+                <span class="stat-label">Yearly contributions</span>
+                <span class="stat-detail">Last 12 months</span>
+              </article>
+            
+          </div>
+
+          
+            <aside class="warning">
+              <p class="eyebrow">Data note</p>
+              <p>GitHub&#39;s public events feed can lag, so very recent activity may not appear immediately.</p>
+            </aside>
+          
+        </aside>
+      </section>
+
+      <main class="layout">
+        <section class="panel panel-grid">
+          <div>
+            <p class="eyebrow">Contribution heatmap</p>
+            <h2>A full-year calendar built from GitHub GraphQL contribution data.</h2>
+            <div class="metric-strip">
+              <div class="metric-chip">
+                <strong>696</strong>
+                <span>Total visible activity</span>
+              </div>
+              <div class="metric-chip">
+                <strong>3</strong>
+                <span>Current streak</span>
+              </div>
+              <div class="metric-chip">
+                <strong>28</strong>
+                <span>Longest streak</span>
+              </div>
+            </div>
+            <div class="heatmap">
+              
+    <svg viewBox="0 0 1083 177" role="img" aria-label="Activity heatmap">
+      <text x="73" y="11" fill="rgba(255,255,255,0.55)" font-size="11">May</text><text x="168" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Jun</text><text x="244" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Jul</text><text x="339" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Aug</text><text x="415" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Sep</text><text x="491" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Oct</text><text x="586" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Nov</text><text x="662" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Dec</text><text x="738" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Jan</text><text x="833" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Feb</text><text x="909" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Mar</text><text x="985" y="11" fill="rgba(255,255,255,0.55)" font-size="11">Apr</text>
+      <text x="10" y="28" fill="rgba(255,255,255,0.55)" font-size="11">S</text><text x="10" y="47" fill="rgba(255,255,255,0.55)" font-size="11">M</text><text x="10" y="66" fill="rgba(255,255,255,0.55)" font-size="11">T</text><text x="10" y="85" fill="rgba(255,255,255,0.55)" font-size="11">W</text><text x="10" y="104" fill="rgba(255,255,255,0.55)" font-size="11">T</text><text x="10" y="123" fill="rgba(255,255,255,0.55)" font-size="11">F</text><text x="10" y="142" fill="rgba(255,255,255,0.55)" font-size="11">S</text>
+      
+        <rect x="54" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="54" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-19: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="54" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="54" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-21: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="54" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-04-22: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="54" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-23: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="54" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="73" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-25: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="73" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-26: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="73" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-27: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="73" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="73" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-29: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="73" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-04-30: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="73" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-01: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="92" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-02: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="92" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-03: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="92" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-04: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="92" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-05-05: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="92" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-06: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="92" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-07: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="92" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-08: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="111" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-09: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="111" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-10: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="111" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-11: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="111" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-12: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="111" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-13: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="111" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="111" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-15: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="130" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-16: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="130" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="130" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="130" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-19: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="130" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="130" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-21: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="130" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-22: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="149" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-23: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="149" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="149" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-25: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="149" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-26: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="149" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-27: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="149" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="149" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-29: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="168" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-30: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="168" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-05-31: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="168" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-01: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="168" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-02: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="168" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-03: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="168" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-04: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="168" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-05: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="187" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-06: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="187" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-07: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="187" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-08: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="187" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-09: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="187" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-10: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="187" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-11: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="187" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-12: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="206" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-13: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="206" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="206" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-15: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="206" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-16: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="206" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="206" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="206" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-19: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="225" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="225" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-21: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="225" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-22: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="225" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-06-23: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="225" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="225" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-25: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="225" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-26: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="244" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-27: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="244" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="244" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-29: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="244" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-06-30: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="244" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-01: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="244" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-02: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="244" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-03: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="263" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-04: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="263" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-05: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="263" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-06: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="263" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-07: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="263" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-08: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="263" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-09: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="263" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-10: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="282" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-11: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="282" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-12: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="282" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-13: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="282" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="282" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-15: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="282" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-16: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="282" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="301" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="301" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-19: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="301" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="301" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-21: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="301" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-22: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="301" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-23: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="301" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="320" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-25: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="320" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-26: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="320" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-27: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="320" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="320" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-29: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="320" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-30: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="320" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-07-31: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="339" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-01: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="339" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-02: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="339" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-03: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="339" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-04: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="339" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-05: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="339" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-08-06: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="339" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-07: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="358" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-08: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="358" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-09: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="358" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-10: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="358" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-11: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="358" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-12: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="358" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-13: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="358" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="377" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-15: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="377" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-16: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="377" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="377" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="377" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-19: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="377" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="377" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-21: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="396" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-22: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="396" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-23: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="396" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="396" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-25: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="396" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-26: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="396" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-27: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="396" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="415" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-29: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="415" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-30: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="415" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-08-31: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="415" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-01: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="415" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-02: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="415" y="111" width="14" height="14" rx="4" fill="#40c463">
+          <title>2025-09-03: 34 visible contributions</title>
+        </rect>
+      
+        <rect x="415" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-09-04: 17 visible contributions</title>
+        </rect>
+      
+        <rect x="434" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-09-05: 14 visible contributions</title>
+        </rect>
+      
+        <rect x="434" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-09-06: 13 visible contributions</title>
+        </rect>
+      
+        <rect x="434" y="54" width="14" height="14" rx="4" fill="#40c463">
+          <title>2025-09-07: 33 visible contributions</title>
+        </rect>
+      
+        <rect x="434" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-08: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="434" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-09-09: 7 visible contributions</title>
+        </rect>
+      
+        <rect x="434" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-10: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="434" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-11: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="453" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-12: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="453" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-09-13: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="453" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="453" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-15: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="453" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-16: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="453" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="453" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="472" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-19: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="472" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="472" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-21: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="472" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-22: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="472" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-23: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="472" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="472" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-25: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="491" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-26: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="491" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-27: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="491" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="491" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-09-29: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="491" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-09-30: 8 visible contributions</title>
+        </rect>
+      
+        <rect x="491" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-01: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="491" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-02: 6 visible contributions</title>
+        </rect>
+      
+        <rect x="510" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-03: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="510" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-04: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="510" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-05: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="510" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-06: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="510" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-07: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="510" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-08: 9 visible contributions</title>
+        </rect>
+      
+        <rect x="510" y="130" width="14" height="14" rx="4" fill="#30a14e">
+          <title>2025-10-09: 40 visible contributions</title>
+        </rect>
+      
+        <rect x="529" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-10: 5 visible contributions</title>
+        </rect>
+      
+        <rect x="529" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-11: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="529" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-12: 14 visible contributions</title>
+        </rect>
+      
+        <rect x="529" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-13: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="529" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="529" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-15: 17 visible contributions</title>
+        </rect>
+      
+        <rect x="529" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-16: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="548" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="548" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="548" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-19: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="548" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="548" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-21: 12 visible contributions</title>
+        </rect>
+      
+        <rect x="548" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-22: 12 visible contributions</title>
+        </rect>
+      
+        <rect x="548" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-23: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="567" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="567" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-25: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="567" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-10-26: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="567" y="73" width="14" height="14" rx="4" fill="#40c463">
+          <title>2025-10-27: 22 visible contributions</title>
+        </rect>
+      
+        <rect x="567" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="567" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-29: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="567" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-30: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="586" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-10-31: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="586" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-01: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="586" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-02: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="586" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-03: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="586" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-04: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="586" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-05: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="586" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-06: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="605" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-07: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="605" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-08: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="605" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-09: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="605" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-10: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="605" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-11: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="605" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-12: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="605" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-11-13: 10 visible contributions</title>
+        </rect>
+      
+        <rect x="624" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="624" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-15: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="624" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-16: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="624" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="624" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="624" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-19: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="624" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="643" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-21: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="643" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-22: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="643" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-23: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="643" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="643" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-25: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="643" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-26: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="643" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-27: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="662" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="662" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-11-29: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="662" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2025-11-30: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="662" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-01: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="662" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-02: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="662" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-03: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="662" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-04: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="681" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-05: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="681" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-06: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="681" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-07: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="681" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-08: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="681" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-09: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="681" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-10: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="681" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-11: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="700" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-12: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="700" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-13: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="700" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="700" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-15: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="700" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-16: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="700" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="700" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="719" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-19: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="719" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="719" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-21: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="719" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-22: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="719" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-23: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="719" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="719" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-25: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="738" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-26: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="738" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-27: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="738" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="738" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-29: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="738" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-30: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="738" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2025-12-31: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="738" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-01: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="757" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-02: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="757" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-03: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="757" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-04: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="757" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-05: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="757" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-01-06: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="757" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-01-07: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="757" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-01-08: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="776" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-09: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="776" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-10: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="776" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-11: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="776" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-12: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="776" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-13: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="776" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="776" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-01-15: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="795" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-16: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="795" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="795" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-18: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="795" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-19: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="795" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-20: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="795" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-21: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="795" y="130" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-22: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="814" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-23: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="814" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-24: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="814" y="54" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-25: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="814" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-26: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="814" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-27: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="814" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-01-28: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="814" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-01-29: 11 visible contributions</title>
+        </rect>
+      
+        <rect x="833" y="16" width="14" height="14" rx="4" fill="#216e39">
+          <title>2026-01-30: 75 visible contributions</title>
+        </rect>
+      
+        <rect x="833" y="35" width="14" height="14" rx="4" fill="#40c463">
+          <title>2026-01-31: 19 visible contributions</title>
+        </rect>
+      
+        <rect x="833" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-01: 11 visible contributions</title>
+        </rect>
+      
+        <rect x="833" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-02: 6 visible contributions</title>
+        </rect>
+      
+        <rect x="833" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-03: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="833" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-04: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="833" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-05: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="852" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-06: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="852" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-07: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="852" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-08: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="852" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-09: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="852" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-10: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="852" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-11: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="852" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-12: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="871" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-13: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="871" y="35" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-02-14: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="871" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-15: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="871" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-16: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="871" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-17: 8 visible contributions</title>
+        </rect>
+      
+        <rect x="871" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-18: 8 visible contributions</title>
+        </rect>
+      
+        <rect x="871" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-19: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="890" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-20: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="890" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-21: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="890" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-22: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="890" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-23: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="890" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-24: 7 visible contributions</title>
+        </rect>
+      
+        <rect x="890" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-25: 15 visible contributions</title>
+        </rect>
+      
+        <rect x="890" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-26: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="909" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-27: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="909" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-02-28: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="909" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-01: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="909" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-02: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="909" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-03: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="909" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-04: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="909" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-05: 8 visible contributions</title>
+        </rect>
+      
+        <rect x="928" y="16" width="14" height="14" rx="4" fill="#40c463">
+          <title>2026-03-06: 28 visible contributions</title>
+        </rect>
+      
+        <rect x="928" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-07: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="928" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-08: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="928" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-09: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="928" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-03-10: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="928" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-11: 5 visible contributions</title>
+        </rect>
+      
+        <rect x="928" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-12: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="947" y="16" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-03-13: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="947" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-14: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="947" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-15: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="947" y="73" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-03-16: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="947" y="92" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-03-17: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="947" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-18: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="947" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-19: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="966" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-20: 1 visible contributions</title>
+        </rect>
+      
+        <rect x="966" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-21: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="966" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-22: 5 visible contributions</title>
+        </rect>
+      
+        <rect x="966" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-23: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="966" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-24: 5 visible contributions</title>
+        </rect>
+      
+        <rect x="966" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-25: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="966" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-26: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="985" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-27: 2 visible contributions</title>
+        </rect>
+      
+        <rect x="985" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-28: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="985" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-29: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="985" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-30: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="985" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-03-31: 5 visible contributions</title>
+        </rect>
+      
+        <rect x="985" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-01: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="985" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-02: 6 visible contributions</title>
+        </rect>
+      
+        <rect x="1004" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-03: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1004" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-04: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1004" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-05: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1004" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-06: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1004" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-07: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1004" y="111" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-08: 3 visible contributions</title>
+        </rect>
+      
+        <rect x="1004" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-09: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1023" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-10: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1023" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-11: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1023" y="54" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-12: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1023" y="73" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-13: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1023" y="92" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-14: 7 visible contributions</title>
+        </rect>
+      
+        <rect x="1023" y="111" width="14" height="14" rx="4" fill="#ebedf0">
+          <title>2026-04-15: 0 visible contributions</title>
+        </rect>
+      
+        <rect x="1023" y="130" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-16: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1042" y="16" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-17: 4 visible contributions</title>
+        </rect>
+      
+        <rect x="1042" y="35" width="14" height="14" rx="4" fill="#9be9a8">
+          <title>2026-04-18: 5 visible contributions</title>
+        </rect>
+      
+    </svg>
+  
+            </div>
+          </div>
+
+          <div>
+            <p class="eyebrow">Trendline</p>
+            <h3>Monthly activity skyline</h3>
+            <div class="trend">
+    <svg viewBox="0 0 660 220" role="img" aria-label="Monthly activity chart">
+      <defs>
+        <linearGradient id="trend-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#9ce6ff"></stop>
+          <stop offset="100%" stop-color="#ffb86b"></stop>
+        </linearGradient>
+      </defs>
+      <line x1="20" y1="172" x2="640" y2="172" stroke="rgba(255,255,255,0.14)"></line>
+      
+        <rect x="34" y="171" width="36" height="1" rx="10" fill="url(#trend-gradient)">
+          <title>Apr 25: 1</title>
+        </rect>
+        <text x="52" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Apr 25</text>
+      
+        <rect x="82" y="171" width="36" height="1" rx="10" fill="url(#trend-gradient)">
+          <title>May 25: 1</title>
+        </rect>
+        <text x="100" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">May 25</text>
+      
+        <rect x="130" y="171" width="36" height="1" rx="10" fill="url(#trend-gradient)">
+          <title>Jun 25: 1</title>
+        </rect>
+        <text x="148" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Jun 25</text>
+      
+        <rect x="178" y="172" width="36" height="0" rx="10" fill="url(#trend-gradient)">
+          <title>Jul 25: 0</title>
+        </rect>
+        <text x="196" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Jul 25</text>
+      
+        <rect x="226" y="171" width="36" height="1" rx="10" fill="url(#trend-gradient)">
+          <title>Aug 25: 1</title>
+        </rect>
+        <text x="244" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Aug 25</text>
+      
+        <rect x="274" y="45" width="36" height="127" rx="10" fill="url(#trend-gradient)">
+          <title>Sep 25: 127</title>
+        </rect>
+        <text x="292" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Sep 25</text>
+      
+        <rect x="322" y="22" width="36" height="150" rx="10" fill="url(#trend-gradient)">
+          <title>Oct 25: 150</title>
+        </rect>
+        <text x="340" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Oct 25</text>
+      
+        <rect x="370" y="160" width="36" height="12" rx="10" fill="url(#trend-gradient)">
+          <title>Nov 25: 12</title>
+        </rect>
+        <text x="388" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Nov 25</text>
+      
+        <rect x="418" y="172" width="36" height="0" rx="10" fill="url(#trend-gradient)">
+          <title>Dec 25: 0</title>
+        </rect>
+        <text x="436" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Dec 25</text>
+      
+        <rect x="466" y="58" width="36" height="114" rx="10" fill="url(#trend-gradient)">
+          <title>Jan 26: 114</title>
+        </rect>
+        <text x="484" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Jan 26</text>
+      
+        <rect x="514" y="67" width="36" height="105" rx="10" fill="url(#trend-gradient)">
+          <title>Feb 26: 105</title>
+        </rect>
+        <text x="532" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Feb 26</text>
+      
+        <rect x="562" y="61" width="36" height="111" rx="10" fill="url(#trend-gradient)">
+          <title>Mar 26: 111</title>
+        </rect>
+        <text x="580" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Mar 26</text>
+      
+        <rect x="610" y="99" width="36" height="73" rx="10" fill="url(#trend-gradient)">
+          <title>Apr 26: 73</title>
+        </rect>
+        <text x="628" y="196" text-anchor="middle" fill="rgba(255,255,255,0.52)" font-size="11">Apr 26</text>
+      
+    </svg>
+  </div>
+
+            <div class="bars">
+              <div class="bar-row">
+                <div class="bar-meta">
+                  <span>Busiest day</span>
+                  <span>Friday · 75</span>
+                </div>
+              </div>
+              
+                    <div class="bar-row">
+                      <div class="bar-meta">
+                        <span>Sunday</span>
+                        <span>94</span>
+                      </div>
+                      <div class="bar-track"><div class="bar-fill" style="width: 64%;"></div></div>
+                    </div>
+                  
+                    <div class="bar-row">
+                      <div class="bar-meta">
+                        <span>Monday</span>
+                        <span>57</span>
+                      </div>
+                      <div class="bar-track"><div class="bar-fill" style="width: 39%;"></div></div>
+                    </div>
+                  
+                    <div class="bar-row">
+                      <div class="bar-meta">
+                        <span>Tuesday</span>
+                        <span>75</span>
+                      </div>
+                      <div class="bar-track"><div class="bar-fill" style="width: 51%;"></div></div>
+                    </div>
+                  
+                    <div class="bar-row">
+                      <div class="bar-meta">
+                        <span>Wednesday</span>
+                        <span>122</span>
+                      </div>
+                      <div class="bar-track"><div class="bar-fill" style="width: 83%;"></div></div>
+                    </div>
+                  
+                    <div class="bar-row">
+                      <div class="bar-meta">
+                        <span>Thursday</span>
+                        <span>131</span>
+                      </div>
+                      <div class="bar-track"><div class="bar-fill" style="width: 89%;"></div></div>
+                    </div>
+                  
+                    <div class="bar-row">
+                      <div class="bar-meta">
+                        <span>Friday</span>
+                        <span>147</span>
+                      </div>
+                      <div class="bar-track"><div class="bar-fill" style="width: 100%;"></div></div>
+                    </div>
+                  
+                    <div class="bar-row">
+                      <div class="bar-meta">
+                        <span>Saturday</span>
+                        <span>70</span>
+                      </div>
+                      <div class="bar-track"><div class="bar-fill" style="width: 48%;"></div></div>
+                    </div>
+                  
+            </div>
+          </div>
+        </section>
+
+        <section class="panel two-column">
+          <div>
+            <p class="eyebrow">Activity mix</p>
+            <h3>Where the visible work shows up</h3>
+            <div class="bars">
+              
+                <div class="bar-row">
+                  <div class="bar-meta">
+                    <span>Commits</span>
+                    <span>677</span>
+                  </div>
+                  <div class="bar-track"><div class="bar-fill" style="width: 100%;"></div></div>
+                </div>
+              
+                <div class="bar-row">
+                  <div class="bar-meta">
+                    <span>Pull requests</span>
+                    <span>11</span>
+                  </div>
+                  <div class="bar-track"><div class="bar-fill" style="width: 6%;"></div></div>
+                </div>
+              
+                <div class="bar-row">
+                  <div class="bar-meta">
+                    <span>Issues</span>
+                    <span>1</span>
+                  </div>
+                  <div class="bar-track"><div class="bar-fill" style="width: 6%;"></div></div>
+                </div>
+              
+            </div>
+          </div>
+
+          <div>
+            <p class="eyebrow">Language spread</p>
+            <h3>Weighted by owned repository size</h3>
+            <div class="languages">
+              
+                <div class="bar-row">
+                  <div class="bar-meta">
+                    <span style="display:inline-flex;align-items:center;gap:10px;">
+                      <span class="dot" style="--dot-color:hsl(99 72% 62%);"></span>
+                      HTML
+                    </span>
+                    <span>81% · 2 repos</span>
+                  </div>
+                  <div class="bar-track">
+                    <div class="bar-fill language-fill" style="width:100%; --bar-color:hsl(99 72% 62%);"></div>
+                  </div>
+                </div>
+              
+                <div class="bar-row">
+                  <div class="bar-meta">
+                    <span style="display:inline-flex;align-items:center;gap:10px;">
+                      <span class="dot" style="--dot-color:hsl(244 72% 62%);"></span>
+                      Python
+                    </span>
+                    <span>8% · 5 repos</span>
+                  </div>
+                  <div class="bar-track">
+                    <div class="bar-fill language-fill" style="width:10%; --bar-color:hsl(244 72% 62%);"></div>
+                  </div>
+                </div>
+              
+                <div class="bar-row">
+                  <div class="bar-meta">
+                    <span style="display:inline-flex;align-items:center;gap:10px;">
+                      <span class="dot" style="--dot-color:hsl(144 72% 62%);"></span>
+                      Shell
+                    </span>
+                    <span>0% · 1 repos</span>
+                  </div>
+                  <div class="bar-track">
+                    <div class="bar-fill language-fill" style="width:6%; --bar-color:hsl(144 72% 62%);"></div>
+                  </div>
+                </div>
+              
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <p class="eyebrow">Repo spotlights</p>
+          <h3>Projects carrying the strongest public signal</h3>
+          <div class="repo-grid" style="margin-top: 18px;">
+            
+              <article class="repo-card">
+                <div class="repo-head">
+                  <div>
+                    <h4 class="repo-name">sqlmap-AES-encrypt-payload</h4>
+                    <p style="margin-top: 8px;">sqlmap AES encrypt payload</p>
+                  </div>
+                  <span class="pill">
+                    <span class="dot" style="--dot-color:hsl(244 72% 62%);"></span>
+                    Python
+                  </span>
+                </div>
+
+                <div class="repo-meta">
+                  <span class="pill">★ 2</span>
+                  <span class="pill">⑂ 1</span>
+                  <span class="pill">Issues 0</span>
+                </div>
+
+                <div class="timeline-row" style="margin-top: 16px;">
+                  <span>Apr 14, 2026</span>
+                  <span>3 days ago</span>
+                </div>
+
+                <a href="https://github.com/TrueNix/sqlmap-AES-encrypt-payload" target="_blank" rel="noreferrer" style="display:inline-block;margin-top:16px;">
+                  View repository
+                </a>
+              </article>
+            
+              <article class="repo-card">
+                <div class="repo-head">
+                  <div>
+                    <h4 class="repo-name">analyze_my_apks</h4>
+                    <p style="margin-top: 8px;">No description yet.</p>
+                  </div>
+                  <span class="pill">
+                    <span class="dot" style="--dot-color:hsl(281 72% 62%);"></span>
+                    Mixed
+                  </span>
+                </div>
+
+                <div class="repo-meta">
+                  <span class="pill">★ 1</span>
+                  <span class="pill">⑂ 0</span>
+                  <span class="pill">Issues 0</span>
+                </div>
+
+                <div class="timeline-row" style="margin-top: 16px;">
+                  <span>Jan 7, 2026</span>
+                  <span>100 days ago</span>
+                </div>
+
+                <a href="https://github.com/TrueNix/analyze_my_apks" target="_blank" rel="noreferrer" style="display:inline-block;margin-top:16px;">
+                  View repository
+                </a>
+              </article>
+            
+              <article class="repo-card">
+                <div class="repo-head">
+                  <div>
+                    <h4 class="repo-name">website</h4>
+                    <p style="margin-top: 8px;">No description yet.</p>
+                  </div>
+                  <span class="pill">
+                    <span class="dot" style="--dot-color:hsl(99 72% 62%);"></span>
+                    HTML
+                  </span>
+                </div>
+
+                <div class="repo-meta">
+                  <span class="pill">★ 0</span>
+                  <span class="pill">⑂ 0</span>
+                  <span class="pill">Issues 0</span>
+                </div>
+
+                <div class="timeline-row" style="margin-top: 16px;">
+                  <span>Apr 18, 2026</span>
+                  <span>today</span>
+                </div>
+
+                <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer" style="display:inline-block;margin-top:16px;">
+                  View repository
+                </a>
+              </article>
+            
+              <article class="repo-card">
+                <div class="repo-head">
+                  <div>
+                    <h4 class="repo-name">zalupa</h4>
+                    <p style="margin-top: 8px;">No description yet.</p>
+                  </div>
+                  <span class="pill">
+                    <span class="dot" style="--dot-color:hsl(143 72% 62%);"></span>
+                    Mixed
+                  </span>
+                </div>
+
+                <div class="repo-meta">
+                  <span class="pill">★ 0</span>
+                  <span class="pill">⑂ 0</span>
+                  <span class="pill">Issues 0</span>
+                </div>
+
+                <div class="timeline-row" style="margin-top: 16px;">
+                  <span>Feb 11, 2026</span>
+                  <span>65 days ago</span>
+                </div>
+
+                <a href="https://github.com/TrueNix/zalupa" target="_blank" rel="noreferrer" style="display:inline-block;margin-top:16px;">
+                  View repository
+                </a>
+              </article>
+            
+              <article class="repo-card">
+                <div class="repo-head">
+                  <div>
+                    <h4 class="repo-name">truenix.github.io</h4>
+                    <p style="margin-top: 8px;">No description yet.</p>
+                  </div>
+                  <span class="pill">
+                    <span class="dot" style="--dot-color:hsl(99 72% 62%);"></span>
+                    HTML
+                  </span>
+                </div>
+
+                <div class="repo-meta">
+                  <span class="pill">★ 0</span>
+                  <span class="pill">⑂ 0</span>
+                  <span class="pill">Issues 0</span>
+                </div>
+
+                <div class="timeline-row" style="margin-top: 16px;">
+                  <span>Jan 29, 2026</span>
+                  <span>78 days ago</span>
+                </div>
+
+                <a href="https://github.com/TrueNix/truenix.github.io" target="_blank" rel="noreferrer" style="display:inline-block;margin-top:16px;">
+                  View repository
+                </a>
+              </article>
+            
+              <article class="repo-card">
+                <div class="repo-head">
+                  <div>
+                    <h4 class="repo-name">Burp-Suite-Intruder-Parameter-Counter</h4>
+                    <p style="margin-top: 8px;">No description yet.</p>
+                  </div>
+                  <span class="pill">
+                    <span class="dot" style="--dot-color:hsl(244 72% 62%);"></span>
+                    Python
+                  </span>
+                </div>
+
+                <div class="repo-meta">
+                  <span class="pill">★ 0</span>
+                  <span class="pill">⑂ 0</span>
+                  <span class="pill">Issues 0</span>
+                </div>
+
+                <div class="timeline-row" style="margin-top: 16px;">
+                  <span>Oct 31, 2024</span>
+                  <span>533 days ago</span>
+                </div>
+
+                <a href="https://github.com/TrueNix/Burp-Suite-Intruder-Parameter-Counter" target="_blank" rel="noreferrer" style="display:inline-block;margin-top:16px;">
+                  View repository
+                </a>
+              </article>
+            
+          </div>
+        </section>
+
+        <section class="panel two-column">
+          <div>
+            <p class="eyebrow">Recent public activity</p>
+            <h3>Latest visible moves</h3>
+            <div class="timeline" style="margin-top: 18px;">
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 18, 2026</span>
+                    <span>today</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 18, 2026</span>
+                    <span>today</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 17, 2026</span>
+                    <span>today</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 17, 2026</span>
+                    <span>today</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 17, 2026</span>
+                    <span>today</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 17, 2026</span>
+                    <span>today</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 17, 2026</span>
+                    <span>today</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 17, 2026</span>
+                    <span>1 day ago</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 17, 2026</span>
+                    <span>1 day ago</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+                <article class="timeline-item">
+                  <div class="timeline-row">
+                    <span>Apr 16, 2026</span>
+                    <span>1 day ago</span>
+                  </div>
+                  <strong>Pushed 0 commits to TrueNix/website</strong>
+                  <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">TrueNix/website</a>
+                </article>
+              
+            </div>
+          </div>
+
+          <div>
+            <p class="eyebrow">Contribution repos</p>
+            <h3>Repositories with visible contribution weight</h3>
+            <div class="timeline" style="margin-top: 18px;">
+              
+                    <article class="timeline-item">
+                      <div class="timeline-row">
+                        <span>Public</span>
+                        <span>377 commits</span>
+                      </div>
+                      <strong>TrueNix/website</strong>
+                      <div class="repo-meta">
+                        <span class="pill">
+                          <span class="dot" style="--dot-color:#e34c26;"></span>
+                          HTML
+                        </span>
+                        <span class="pill">★ 0</span>
+                      </div>
+                      <a href="https://github.com/TrueNix/website" target="_blank" rel="noreferrer">Open repository</a>
+                    </article>
+                  
+                    <article class="timeline-item">
+                      <div class="timeline-row">
+                        <span>Public</span>
+                        <span>294 commits</span>
+                      </div>
+                      <strong>TrueNix/truenix.github.io</strong>
+                      <div class="repo-meta">
+                        <span class="pill">
+                          <span class="dot" style="--dot-color:#e34c26;"></span>
+                          HTML
+                        </span>
+                        <span class="pill">★ 0</span>
+                      </div>
+                      <a href="https://github.com/TrueNix/truenix.github.io" target="_blank" rel="noreferrer">Open repository</a>
+                    </article>
+                  
+                    <article class="timeline-item">
+                      <div class="timeline-row">
+                        <span>Public</span>
+                        <span>5 commits</span>
+                      </div>
+                      <strong>TrueNix/analyze_my_apks</strong>
+                      <div class="repo-meta">
+                        <span class="pill">
+                          <span class="dot" style="--dot-color:hsl(73 72% 62%);"></span>
+                          Mixed
+                        </span>
+                        <span class="pill">★ 1</span>
+                      </div>
+                      <a href="https://github.com/TrueNix/analyze_my_apks" target="_blank" rel="noreferrer">Open repository</a>
+                    </article>
+                  
+                    <article class="timeline-item">
+                      <div class="timeline-row">
+                        <span>Public</span>
+                        <span>1 commits</span>
+                      </div>
+                      <strong>TrueNix/zalupa</strong>
+                      <div class="repo-meta">
+                        <span class="pill">
+                          <span class="dot" style="--dot-color:hsl(281 72% 62%);"></span>
+                          Mixed
+                        </span>
+                        <span class="pill">★ 0</span>
+                      </div>
+                      <a href="https://github.com/TrueNix/zalupa" target="_blank" rel="noreferrer">Open repository</a>
+                    </article>
+                  
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <p class="eyebrow">Generated insights</p>
+          <h3>Human-readable takeaways from the data</h3>
+          <div class="insight-grid" style="margin-top: 18px;">
+            
+              <article class="insight-item">
+                <p>106 active days surfaced in the current visualization window.</p>
+              </article>
+            
+              <article class="insight-item">
+                <p>The longest visible streak is 28 days, with a current streak of 3.</p>
+              </article>
+            
+              <article class="insight-item">
+                <p>Friday is the strongest weekday, and the busiest single day was undefined, 2026-01-30.</p>
+              </article>
+            
+              <article class="insight-item">
+                <p>4 owned repositorys saw pushes in the last 90 days.</p>
+              </article>
+            
+              <article class="insight-item">
+                <p>HTML leads the repo mix at roughly 81% of the weighted language footprint.</p>
+              </article>
+            
+              <article class="insight-item">
+                <p>TrueNix/sqlmap-AES-encrypt-payload is the strongest spotlight candidate with 2 stars and activity as recent as 3 days ago.</p>
+              </article>
+            
+              <article class="insight-item">
+                <p>Commits drive the activity mix, and owned repos have collected 3 stars overall.</p>
+              </article>
+            
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>Generated Sat, 18 Apr 2026 07:02:33 GMT with <code>commit-canvas</code>. GitHub contribution timestamps are UTC, and public events can arrive with a delay.</p>
+      </footer>
+    </div>
+  </body>
+</html>
