@@ -111,10 +111,10 @@ To activate it on GitHub:
 3. Add a repository secret named `COMMIT_CANVAS_TOKEN` with a personal access token if you want richer contribution data than the default workflow token can provide.
 4. Push to `main` or run the workflow manually from the Actions tab.
 
-If this repository name stays `codex2`, the project site URL will typically be:
+For this repository, the project site URL is typically:
 
 ```text
-https://truenix.github.io/codex2/
+https://truenix.github.io/commit-canvas/
 ```
 
 ## Token Modes
